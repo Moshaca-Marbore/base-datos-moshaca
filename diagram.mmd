@@ -1,0 +1,84 @@
+erDiagram
+    PARENTESCO {
+        int id_parentesco PK
+        varchar nombre_parentesco
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    TIPO_REPORTE {
+        int id_tipo_reporte PK
+        varchar nombre_tipo
+        varchar descripcion
+        enum gravedad
+    }
+    
+    %% Tablas Principales
+    ALUMNO {
+        varchar boleta PK
+        varchar curp
+        varchar nombre
+        varchar apellido_paterno
+        varchar apellido_materno
+        varchar foto
+        enum status
+    }
+    
+    TUTOR {
+        varchar id_tutor PK
+        varchar nombre
+        varchar apellido_paterno
+        varchar apellido_materno
+        varchar telefono
+        varchar email
+        varchar direccion
+        varchar foto
+        enum status
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    CREDENCIAL {
+        varchar id_credencial PK
+        varchar boleta FK
+        varchar codigo_qr
+        datetime fecha_emision
+        datetime fecha_vencimiento
+    }
+    
+    ALUMNO_TUTOR {
+        varchar id_relacion PK
+        varchar boleta FK
+        varchar id_tutor FK
+        int id_parentesco FK
+        tinyint es_contacto_principal
+        enum status
+    }
+    
+    REGISTRO_ACCESO {
+        varchar id_registro PK
+        varchar boleta FK
+        enum tipo_acceso
+        enum metodo_acceso
+        timestamp fecha_hora
+    }
+    
+    REPORTE {
+        varchar id_reporte PK
+        varchar boleta FK
+        int id_tipo_reporte FK
+        varchar motivo
+        datetime fecha
+        enum status
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    %% Relaciones
+    ALUMNO ||--o{ CREDENCIAL : "tiene"
+    ALUMNO ||--o{ ALUMNO_TUTOR : "tiene"
+    TUTOR ||--o{ ALUMNO_TUTOR : "es_tutor_de"
+    PARENTESCO ||--o{ ALUMNO_TUTOR : "define_tipo"
+    ALUMNO ||--o{ REGISTRO_ACCESO : "registra"
+    ALUMNO ||--o{ REPORTE : "genera"
+    TIPO_REPORTE ||--o{ REPORTE : "categoriza"
